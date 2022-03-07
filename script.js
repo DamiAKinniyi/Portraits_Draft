@@ -24,58 +24,17 @@ import { Rhino3dmLoader } from 'https://cdn.jsdelivr.net/npm/three@0.124.0/examp
 //Set up Slider Events
 //Declare sliders//
 //Set up Image Selection and Preview--------------------------------------//
-let image, image2, reader, dataUri;
+let image, image2, reader, imageAddress, filepath;
 image = document.getElementById("myImage")
 const imagePreview = document.getElementsByClassName("image_preview")[0];
 image.addEventListener('change', imageChange);
-
-function imageChange(){
-    console.log(image.files)
-    console.log(image.files[0])
-    console.log(imagePreview)
-    while(imagePreview.firstChild){
-        console.log(imagePreview.firstChild)
-        console.log(imagePreview.innerHTML)
-        imagePreview.removeChild(imagePreview.firstChild)
-    }
-    if (image.files.length === 0){
-        alert('No Image Selected')
-        imagePreview.innerHTML="No Image Selected"
-        return      
-    }else{
-        alert('you have changed the image')
-        updateImageDisplay()
-    }  
-    send.disabled = false
-     
-}
-
-function updateImageDisplay(){
-    
-    image2 = document.createElement('img');
-    imagePreview.appendChild(image2);
-    if(validFileType(image.files[0])){
-        image2.src=URL.createObjectURL(image.files[0])}
-        console.log(image.files[0])
-        image2.alt= image.files[0].name
-        console.log(image2)
-
-}
-const fileTypes = ["image/png", "image/jpeg"];
-
-function validFileType(file) {
-    return fileTypes.includes(file.type);
-  }
-
-let send = document.getElementById('submit');
-send.addEventListener("click", onSend);
 
 
 
 //-----------------------------------------------------------//
 
 //Setup Parameter Sliders-----------------------------------------//
-let width, height, clarity, abstraction, yay, nay, invert, dots, boxes, pixels, monochrome, coloured, colorMode, holder, filepath;
+let width, height, clarity, abstraction, yay, nay, invert, dots, boxes, pixels, monochrome, coloured, colorMode, holder;
 
 
 width = document.getElementById("width")
@@ -112,8 +71,9 @@ coloured = document.getElementById("coloured")
 coloured.addEventListener("click", onClick)
 colorMode = 0
 
-filepath = "./Images/Starting Image-01.jpg/"
+filepath = imageAddress //"./Images/Starting Image-01.jpg/"
 //console.log(filepath)
+console.log(filepath)
 
 
 
@@ -181,15 +141,16 @@ async function compute() {
 
     const param7 = new RhinoCompute.Grasshopper.DataTree('Color Mode')
     param7.append([0],[colorMode])
-    //console.log(param7)
+    console.log(param7)
 
     const param8 = new RhinoCompute.Grasshopper.DataTree('Image File')
+    console.log(filepath)
     param8.append([0],[filepath])
     console.log(param8)
 
     //console.log(invert)
     //console.log(pixels)
-    console.log(colorMode)
+    //console.log(colorMode)
 
     // clear values
     const trees = []
@@ -200,7 +161,7 @@ async function compute() {
     trees.push(param5)
     trees.push(param6)
     trees.push(param7)
-    //trees.push(param8)
+    trees.push(param8)
 
 
 
@@ -300,6 +261,56 @@ function onClick(e){
     compute()
 }
 
+
+function imageChange(){
+    console.log(image.files)
+    console.log(image.files[0])
+    console.log(imagePreview)
+    while(imagePreview.firstChild){
+        console.log(imagePreview.firstChild)
+        console.log(imagePreview.innerHTML)
+        imagePreview.removeChild(imagePreview.firstChild)
+    }
+    if (image.files.length === 0){
+        alert('No Image Selected')
+        imagePreview.innerHTML="No Image Selected"
+        return      
+    }else{
+        alert('you have changed the image')
+        updateImageDisplay()
+    }  
+    send.disabled = false
+    //compute()
+     
+}
+
+function updateImageDisplay(){
+    
+    image2 = document.createElement('img');
+    imagePreview.appendChild(image2);
+    if(validFileType(image.files[0])){
+        imageAddress = URL.createObjectURL(image.files[0])}
+        image2.src= imageAddress
+        //let cleanerpath = imageAddress.substring(10)/*replace('-','+')*/
+        //cleanerpath = cleanerpath.replace('_', ('/'))
+        console.log(image.files[0])
+        image2.alt= image.files[0].name
+        console.log(image2)
+        //filepath = cleanerpath
+        
+
+}
+const fileTypes = ["image/png", "image/jpeg"];
+
+function validFileType(file) {
+    return fileTypes.includes(file.type);
+  }
+
+let send = document.getElementById('submit');
+send.addEventListener("click", onSend);
+
+
+///*
 function onSend(){
     //show spinner
     document.getElementById('container').style.display = 'flex';
@@ -308,12 +319,23 @@ function onSend(){
         var fileSize;
         reader = new FileReader();
         reader.readAsDataURL(image.files[0]);
-        console.log(reader.result)
+        
+        //console.log(reader.result)
         reader.onload = function (event) {
-            var dataUrl = event.target.result, imgs = document.createElement("img")
-            imgs.src = dataUrl
-            fileSize = image.files[0].size
-            filepath = reader.result
+            //var dataUrl = event.target.result; 
+            //let imgs = document.createElement("img")
+            //imgs.src = dataUrl
+            //fileSize = image.files[0].size
+            //filepath = reader.result
+            let fpath = reader.result;
+            console.log(fpath)
+            var cleanerPath = fpath.substring(23)
+            //cleanerPath = cleanerPath.replace('-','+')
+            //cleanerPath = cleanerPath.replace('_', '/')
+            filepath = cleanerPath
+            console.log (filepath)
+            compute()
+            
 
             
         };
@@ -326,17 +348,18 @@ function onSend(){
            alert('Done')
        }
         
-        console.log(filepath)
+        //console.log(filepath)
         
     }
     //console.log(dataUrl)
-    console.log(reader)
-    console.log(reader.result)
+    //console.log(reader)
+    //console.log(reader.result)
     
     send.disabled = true
-    compute()
+    
 
 }
+//*/
 
 
 
