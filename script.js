@@ -56,7 +56,7 @@ let colorvalue=0;
 
 const invert = document.getElementById("invert")
 invert.addEventListener('click', onCheck, false)
-let invertvalue = 0;
+let invertvalue=0;
 //console.log(invert)
 
 const dots = document.getElementById("dots")
@@ -473,6 +473,7 @@ function onCheck(e){
   showSpinner(true);
   let b;
   let x = e.target.checked;
+  console.log(e.target.id)
   console.log(x)
   if (x){
     b=1;
@@ -480,6 +481,8 @@ function onCheck(e){
   else{
     b=0
   }
+
+  console.log(b)
   /* e.target.setAttribute('alt',"1");
     e.target.setAttribute('value', '1');
     console.log(e.target.alt)
@@ -489,11 +492,11 @@ function onCheck(e){
     e.target.setAttribute('value', '0')
 
   }*/
-  if(e.target.id = "colormode"){
+  if(e.target.id == "colormode"){
     colorvalue = b;
   }
-  else if(e.target.id = "invert"){
-    invertvalue =b;
+  else if(e.target.id =="invert"){
+    invertvalue = b;
   }
   
   compute()
