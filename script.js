@@ -489,10 +489,10 @@ function onCheck(e){
     e.target.setAttribute('value', '0')
 
   }*/
-  if(e.target.id = colormode){
+  if(e.target.id = "colormode"){
     colorvalue = b;
   }
-  else{
+  else if(e.target.id = "invert"){
     invertvalue =b;
   }
   
